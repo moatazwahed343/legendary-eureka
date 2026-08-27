@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أبو حمدي للأثاث الراقي - نظام الإدارة الشامل</title>
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="brand-box">
+            <h1>أبو حمدي</h1>
+            <p>للأثاث الراقي</p>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-item active" data-target="dashboard"><i class="fas fa-chart-pie"></i><span>الرئيسية</span></a></li>
+            <li><a href="#" class="nav-item" data-target="products"><i class="fas fa-couch"></i><span>المنتجات والمخزون</span></a></li>
+            <li><a href="#" class="nav-item" data-target="kanban"><i class="fas fa-tasks"></i><span>سير العمل - Kanban</span></a></li>
+            <li><a href="#" class="nav-item" data-target="sales"><i class="fas fa-file-invoice-dollar"></i><span>المبيعات والفواتير</span></a></li>
+            <li><a href="#" class="nav-item" data-target="debts"><i class="fas fa-hand-holding-usd"></i><span>إدارة الديون والحسابات</span></a></li>
+            <li><a href="#" class="nav-item" data-target="expenses"><i class="fas fa-wallet"></i><span>المصاريف والتقارير</span></a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <button class="backup-btn" onclick="openBackupModal()">
+                <i class="fas fa-database"></i><span>نسخ احتياطي واستعادة</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header>
+            <div class="header-title">
+                <h2 id="page-title">لوحة التحكم الذكية</h2>
+            </div>
+            <div class="header-actions">
+                <div class="user-badge">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="current-user-display">يوسف حمدي (صاحب المعرض)</span>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="openCalculatorModal()" title="آلة حاسبة سريعة">
+                    <i class="fas fa-calculator"></i>
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="switchUser()" title="تبديل المستخدم">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Section -->
+        <main>
+            <!-- 1. Smart Daily Dashboard -->
+            <section id="dashboard" class="view-section active">
+                <div class="grid-4">
+                    <div class="card stat-card">
+                        <div class="stat-icon" style="background: var(--success);">
+                            <i class="fas fa-vault"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>النقدية بالخزنة</h3>
+                            <div class="value" id="stat-safe-cash">0 ج.م</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon" style="background: var(--accent);">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>ديون العملاء (ليك)</h3>
+                            <div class="value" id="stat-customer-debts">0 ج.م</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon" style="background: var(--danger);">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>ديون التجار (عليك)</h3>
+                            <div class="value" id="stat-supplier-debts">0 ج.م</div>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon" style="background: #2980b9;">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>إجمالي المصاريف</h3>
+                            <div class="value" id="stat-total-expenses">0 ج.م</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="section-header">
+                            <h3><i class="fas fa-bell" style="color: var(--accent);"></i> التنبيهات الذكية والمهام</h3>
+                        </div>
+                        <div id="alerts-container"></div>
+                    </div>
+                    <div class="card">
+                        <div class="section-header">
+                            <h3><i class="fas fa-chart-line" style="color: var(--success);"></i> الحاسبة المالية والتدفق الحقيقي</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+                            <div style="display: flex; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: var(--radius); border: 1px solid var(--border);">
+                                <span style="font-weight: 700; color: var(--text-muted);">إجمالي أرباح الدفاتر (المبيعات)</span>
+                                <span style="font-weight: 900; color: var(--primary);" id="dash-book-profit">0 ج.م</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: var(--radius); border: 1px solid var(--border);">
+                                <span style="font-weight: 700; color: var(--text-muted);">السيولة النقدية المحصلة فعلياً</span>
+                                <span style="font-weight: 900; color: var(--success);" id="dash-cash-liquidity">0 ج.م</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: var(--radius); border: 1px solid var(--border);">
+                                <span style="font-weight: 700; color: var(--text-muted);">صافي الربح التشغيلي الحقيقي</span>
+                                <span style="font-weight: 900; color: var(--accent);" id="dash-net-profit">0 ج.م</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Products & Inventory Management -->
+            <section id="products" class="view-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-couch"></i> إدارة المنتجات والمخزون</h3>
+                    <button class="btn btn-primary" onclick="openProductModal()">
+                        <i class="fas fa-plus"></i> إضافة منتج جديد
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الصورة</th>
+                                    <th>اسم المنتج</th>
+                                    <th>التصنيف الرئيسي</th>
+                                    <th>المواصفات والمحتويات</th>
+                                    <th>تكلفة التصنيع</th>
+                                    <th>سعر البيع</th>
+                                    <th>الحالة</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Visual Workflow Kanban Board -->
+            <section id="kanban" class="view-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-tasks"></i> لوحة تتبع سير العمل (Kanban)</h3>
+                </div>
+                <div class="kanban-container">
+                    <div class="kanban-col">
+                        <div class="kanban-col-header">
+                            <span><i class="fas fa-hammer"></i> الورشة (تحت التصنيع)</span>
+                            <span class="badge badge-warning" id="count-workshop">0</span>
+                        </div>
+                        <div class="kanban-cards-container" id="kanban-workshop"></div>
+                    </div>
+                    <div class="kanban-col">
+                        <div class="kanban-col-header">
+                            <span><i class="fas fa-store"></i> المعرض (جاهز للبيع)</span>
+                            <span class="badge badge-success" id="count-showroom">0</span>
+                        </div>
+                        <div class="kanban-cards-container" id="kanban-showroom"></div>
+                    </div>
+                    <div class="kanban-col">
+                        <div class="kanban-col-header">
+                            <span><i class="fas fa-check-circle"></i> المباعة</span>
+                            <span class="badge badge-info" id="count-sold">0</span>
+                        </div>
+                        <div class="kanban-cards-container" id="kanban-sold"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Sales, Customers, & Invoices -->
+            <section id="sales" class="view-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-file-invoice-dollar"></i> سجل المبيعات والفواتير</h3>
+                    <button class="btn btn-primary" onclick="openCheckoutModal()">
+                        <i class="fas fa-cash-register"></i> إتمام عملية بيع جديدة
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>رقم الفاتورة</th>
+                                    <th>اسم العميل</th>
+                                    <th>رقم الهاتف</th>
+                                    <th>القطعة المباعة</th>
+                                    <th>السعر النهائي</th>
+                                    <th>المقدم المدفوع</th>
+                                    <th>المتبقي (ديون)</th>
+                                    <th>البائع المسؤول</th>
+                                    <th>التاريخ</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Financial Accounts & Debts Management -->
+            <section id="debts" class="view-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-hand-holding-usd"></i> إدارة الديون والحسابات</h3>
+                    <button class="btn btn-primary" onclick="openSupplierDebtModal()">
+                        <i class="fas fa-plus"></i> تسجيل دين على التاجر
+                    </button>
+                </div>
+
+                <div class="card" style="margin-bottom: 30px;">
+                    <div class="section-header" style="margin-bottom: 15px;">
+                        <h3 style="font-size: 1.05rem;"><i class="fas fa-users" style="color: var(--accent);"></i> ديون العملاء (فلوس ليك)</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>اسم العميل</th>
+                                    <th>رقم الهاتف</th>
+                                    <th>القطعة المرتبطة</th>
+                                    <th>إجمالي الدين</th>
+                                    <th>المسدد</th>
+                                    <th>المتبقي</th>
+                                    <th>تاريخ الاستحقاق</th>
+                                    <th>الحالة</th>
+                                    <th>إجراءات وسداد</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customer-debts-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-header" style="margin-bottom: 15px;">
+                        <h3 style="font-size: 1.05rem;"><i class="fas fa-truck-loading" style="color: var(--danger);"></i> ديون التجار (فلوس عليك - مواد خام)</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>اسم التاجر / المورد</th>
+                                    <th>نوع الخامات</th>
+                                    <th>إجمالي المستحق</th>
+                                    <th>المدفوع</th>
+                                    <th>المتبقي</th>
+                                    <th>تاريخ الاستحقاق</th>
+                                    <th>الحالة</th>
+                                    <th>إجراءات السداد</th>
+                                </tr>
+                            </thead>
+                            <tbody id="supplier-debts-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Operational Expenses & Advanced Financial Reports -->
+            <section id="expenses" class="view-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-wallet"></i> المصاريف والتقارير المالية المتقدمة</h3>
+                    <button class="btn btn-primary" onclick="openExpenseModal()">
+                        <i class="fas fa-plus"></i> تسجيل مصروف تشغيلي
+                    </button>
+                </div>
+
+                <div class="grid-4" style="margin-bottom: 20px;">
+                    <div class="card" style="text-align: center; padding: 16px;">
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 6px;">مبيعات وأرباح الشهر</span>
+                        <h3 style="font-size: 1.2rem; font-weight: 900; color: var(--primary);" id="rep-month-sales">0 ج.م</h3>
+                    </div>
+                    <div class="card" style="text-align: center; padding: 16px;">
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 6px;">مصاريف الشهر (خسائر تشغيلية)</span>
+                        <h3 style="font-size: 1.2rem; font-weight: 900; color: var(--danger);" id="rep-month-expenses">0 ج.م</h3>
+                    </div>
+                    <div class="card" style="text-align: center; padding: 16px;">
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 6px;">مبيعات وأرباح السنة</span>
+                        <h3 style="font-size: 1.2rem; font-weight: 900; color: var(--primary);" id="rep-year-sales">0 ج.م</h3>
+                    </div>
+                    <div class="card" style="text-align: center; padding: 16px;">
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 6px;">مصاريف السنة (خسائر تشغيلية)</span>
+                        <h3 style="font-size: 1.2rem; font-weight: 900; color: var(--danger);" id="rep-year-expenses">0 ج.م</h3>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-header">
+                        <h3><i class="fas fa-list-alt"></i> سجل المصاريف التشغيلية</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>بند المصروف</th>
+                                    <th>التصنيف</th>
+                                    <th>المبلغ</th>
+                                    <th>الملاحظات</th>
+                                    <th>التاريخ</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenses-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals Container -->
+    <!-- Calculator Modal -->
+    <div class="modal" id="calculatorModal">
+        <div class="modal-content" style="max-width: 320px;">
+            <div class="modal-header">
+                <h3>آلة حاسبة سريعة</h3>
+                <button class="close-modal" onclick="closeModal('calculatorModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <input type="text" id="calcScreen" class="form-control" style="text-align: left; font-size: 1.2rem; font-weight: 700; background: #f8fafc;" readonly value="0">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                        <button class="btn btn-outline" onclick="calcClear()">C</button>
+                        <button class="btn btn-outline" onclick="calcAppend('/')">÷</button>
+                        <button class="btn btn-outline" onclick="calcAppend('*')">×</button>
+                        <button class="btn btn-outline" onclick="calcAppend('-')">-</button>
+                        <button class="btn btn-outline" onclick="calcAppend('7')">7</button>
+                        <button class="btn btn-outline" onclick="calcAppend('8')">8</button>
+                        <button class="btn btn-outline" onclick="calcAppend('9')">9</button>
+                        <button class="btn btn-outline" onclick="calcAppend('+')">+</button>
+                        <button class="btn btn-outline" onclick="calcAppend('4')">4</button>
+                        <button class="btn btn-outline" onclick="calcAppend('5')">5</button>
+                        <button class="btn btn-outline" onclick="calcAppend('6')">6</button>
+                        <button class="btn btn-success" onclick="calcCalculate()" style="grid-row: span 2; height: 100%;">=</button>
+                        <button class="btn btn-outline" onclick="calcAppend('1')">1</button>
+                        <button class="btn btn-outline" onclick="calcAppend('2')">2</button>
+                        <button class="btn btn-outline" onclick="calcAppend('3')">3</button>
+                        <button class="btn btn-outline" onclick="calcAppend('0')" style="grid-column: span 2;">0</button>
+                        <button class="btn btn-outline" onclick="calcAppend('.')">.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="product-modal-title">إضافة منتج جديد للمخزون</h3>
+                <button class="close-modal" onclick="closeModal('productModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" onsubmit="saveProduct(event)">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label>اسم المنتج</label>
+                        <input type="text" id="prodName" class="form-control" required placeholder="مثال: غرفة نوم مودرن ملكي">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>التصنيف الرئيسي</label>
+                            <select id="prodCategory" class="form-control" required>
+                                <option value="غرف نوم">غرف نوم</option>
+                                <option value="صالونات">صالونات</option>
+                                <option value="أنتريهات">أنتريهات</option>
+                                <option value="سفرة">سفرة</option>
+                                <option value="أطفال">أطفال</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>مرحلة سير العمل الحالية</label>
+                            <select id="prodStage" class="form-control" required>
+                                <option value="الورشة">الورشة (تحت التصنيع)</option>
+                                <option value="المعرض">المعرض (جاهز للبيع)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>المواصفات والمحتويات (القطع)</label>
+                        <input type="text" id="prodSpecs" class="form-control" required placeholder="مثال: دولاب + سرير + 2 كومود">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>تكلفة التصنيع</label>
+                            <input type="number" id="prodCost" class="form-control" min="0" step="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>سعر البيع المقترح</label>
+                            <input type="number" id="prodSellingPrice" class="form-control" min="0" step="0.01" required placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط صورة المنتج (URL)</label>
+                        <input type="url" id="prodImage" class="form-control" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('productModal')">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ المنتج</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إتمام عملية بيع جديدة</h3>
+                <button class="close-modal" onclick="closeModal('checkoutModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="checkoutForm" onsubmit="processCheckout(event)">
+                    <div class="form-group">
+                        <label>اختر المنتج الجاهز للبيع</label>
+                        <select id="saleProductSelect" class="form-control" required onchange="onSaleProductSelected()"></select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>اسم العميل</label>
+                            <input type="text" id="saleCustomerName" class="form-control" required placeholder="اسم العميل الثلاثي">
+                        </div>
+                        <div class="form-group">
+                            <label>رقم هاتف العميل</label>
+                            <input type="text" id="saleCustomerPhone" class="form-control" required placeholder="01xxxxxxxxx">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>البائع المسؤول</label>
+                            <select id="saleSeller" class="form-control" required>
+                                <option value="يوسف حمدي">يوسف حمدي (صاحب المعرض / أبو حمدي)</option>
+                                <option value="جمال حامد">جمال حامد (عامل/بائع)</option>
+                                <option value="حمادة أبو السحار">حمادة أبو السحار (عامل/بائع)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>السعر النهائي للبيع (ج.م)</label>
+                            <input type="number" id="saleFinalPrice" class="form-control" min="0" step="0.01" required oninput="calcSaleDebt()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>المقدم المدفوع بالخزنة (ج.م)</label>
+                            <input type="number" id="saleDeposit" class="form-control" min="0" step="0.01" value="0" required oninput="calcSaleDebt()">
+                        </div>
+                        <div class="form-group">
+                            <label>المتبقي (الدين على العميل)</label>
+                            <input type="number" id="saleRemaining" class="form-control" readonly value="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>تاريخ استحقاق الدين المتبقي</label>
+                            <input type="date" id="saleDueDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>عمولة البائع المحسوبة</label>
+                            <input type="text" id="saleCommissionDisplay" class="form-control" readonly value="0 ج.م">
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('checkoutModal')">إلغاء</button>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> تأكيد وطباعة الفاتورة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debt Payment Modal -->
+    <div class="modal" id="debtPaymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تحصيل دفعة من دين العميل</h3>
+                <button class="close-modal" onclick="closeModal('debtPaymentModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="debtPaymentForm" onsubmit="submitDebtPayment(event)">
+                    <input type="hidden" id="payDebtSaleId">
+                    <div class="form-group">
+                        <label>اسم العميل</label>
+                        <input type="text" id="payCustomerName" class="form-control" readonly>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>المتبقي الحالي</label>
+                            <input type="text" id="payCurrentRemaining" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>قيمة الدفعة المراد تحصيلها (ج.م)</label>
+                            <input type="number" id="payAmount" class="form-control" min="0.01" step="0.01" required placeholder="0.00">
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('debtPaymentModal')">إلغاء</button>
+                        <button type="submit" class="btn btn-success">إثبات وتحصيل بالخزنة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supplier Debt Modal -->
+    <div class="modal" id="supplierDebtModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تسجيل دين مواد خام على التاجر</h3>
+                <button class="close-modal" onclick="closeModal('supplierDebtModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="supplierDebtForm" onsubmit="saveSupplierDebt(event)">
+                    <div class="form-group">
+                        <label>اسم التاجر / المورد</label>
+                        <input type="text" id="supName" class="form-control" required placeholder="مثال: مخلص أخشاب">
+                    </div>
+                    <div class="form-group">
+                        <label>نوع الخامات</label>
+                        <input type="text" id="supMaterial" class="form-control" required placeholder="مثال: أخشاب زان أحمر">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>إجمالي المستحق (ج.م)</label>
+                            <input type="number" id="supTotal" class="form-control" min="0" step="0.01" required oninput="calcSupRemaining()">
+                        </div>
+                        <div class="form-group">
+                            <label>المدفوع حالياً (ج.م)</label>
+                            <input type="number" id="supPaid" class="form-control" min="0" step="0.01" value="0" required oninput="calcSupRemaining()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>المتبقي</label>
+                            <input type="number" id="supRemaining" class="form-control" readonly value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>تاريخ استحقاق السداد</label>
+                            <input type="date" id="supDueDate" class="form-control" required>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('supplierDebtModal')">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ وتسجيل الدين</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div class="modal" id="expenseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تسجيل مصروف تشغيلي جديد</h3>
+                <button class="close-modal" onclick="closeModal('expenseModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="expenseForm" onsubmit="saveExpense(event)">
+                    <div class="form-group">
+                        <label>بند المصروف</label>
+                        <input type="text" id="expTitle" class="form-control" required placeholder="مثال: إيجار المعرض">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>التصنيف</label>
+                            <select id="expCategory" class="form-control" required>
+                                <option value="الإيجار">الإيجار</option>
+                                <option value="فواتير الكهرباء والمياه">فواتير الكهرباء والمياه</option>
+                                <option value="النقل والشحن">النقل والشحن</option>
+                                <option value="صيانة الورشة">صيانة الورشة</option>
+                                <option value="أخرى">أخرى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>المبلغ (ج.م)</label>
+                            <input type="number" id="expAmount" class="form-control" min="0.01" step="0.01" required placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ملاحظات إضافية</label>
+                        <input type="text" id="expNotes" class="form-control" placeholder="تفاصيل إضافية">
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('expenseModal')">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ وصرف من الخزنة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header no-print">
+                <h3>فاتورة رسمية - أبو حمدي للأثاث الراقي</h3>
+                <button class="close-modal" onclick="closeModal('invoiceModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="invoicePrintArea" style="background: white; padding: 30px;">
+                <div style="text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;">
+                    <h2 style="font-size: 1.5rem; font-weight: 900; color: var(--primary);">أبو حمدي للأثاث الراقي</h2>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">ورش ومعرض الموبيليا والتحف الراقية</p>
+                </div>
+                <div id="invoice-details-content"></div>
+            </div>
+            <div class="modal-footer no-print" style="padding: 15px 24px; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border);">
+                <button class="btn btn-outline" onclick="closeModal('invoiceModal')">إغلاق</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="printInvoice()"><i class="fas fa-print"></i> طباعة</button>
+                    <button class="btn btn-primary" onclick="shareInvoiceWhatsApp()"><i class="fab fa-whatsapp"></i> واتساب</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup Modal -->
+    <div class="modal" id="backupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>نسخ احتياطي واستعادة البيانات</h3>
+                <button class="close-modal" onclick="closeModal('backupModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 24px;">
+                    <h4 style="font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">تصدير النسخة الاحتياطية</h4>
+                    <button class="btn btn-primary" onclick="exportDataJSON()"><i class="fas fa-download"></i> تحميل ملف النسخة</button>
+                </div>
+                <hr style="border: 0; border-top: 1px solid var(--border); margin-bottom: 24px;">
+                <div>
+                    <h4 style="font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">استعادة البيانات</h4>
+                    <input type="file" id="importFile" accept=".json" class="form-control" style="margin-bottom: 12px;">
+                    <button class="btn btn-success" onclick="importDataJSON()"><i class="fas fa-upload"></i> استعادة البيانات فوراً</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+</html>
