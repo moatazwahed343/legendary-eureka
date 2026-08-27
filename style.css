@@ -1,0 +1,555 @@
+:root {
+    --primary: #2c3e50;
+    --primary-light: #34495e;
+    --accent: #e67e22;
+    --accent-hover: #d35400;
+    --bg-main: #f4f6f9;
+    --card-bg: #ffffff;
+    --text-main: #2c3e50;
+    --text-muted: #7f8c8d;
+    --success: #27ae60;
+    --warning: #f39c12;
+    --danger: #c0392b;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* --- القائمة الجانبية المنسدلة للهاتف (Drawer) --- */
+aside {
+    width: 260px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    right: -260px; /* مخفية تماماً خارج الشاشة من اليمين */
+    top: 0;
+    z-index: 1000;
+    transition: var(--transition);
+    box-shadow: -4px 0 15px rgba(0,0,0,0.2);
+}
+
+aside.mobile-open {
+    right: 0; /* تظهر عند الضغط على زر القائمة */
+}
+
+/* طبقة تعتيم الخلفية عند فتح القائمة */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    display: none;
+    backdrop-filter: blur(2px);
+}
+.sidebar-overlay.active {
+    display: block;
+}
+
+.brand-box {
+    padding: 20px;
+    background: rgba(0,0,0,0.15);
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.brand-box h1 {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.brand-box p {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 15px 10px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.nav-links li {
+    margin-bottom: 6px;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: #bdc3c7;
+    text-decoration: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background: var(--accent);
+    color: white;
+}
+
+.nav-links a i {
+    font-size: 1.1rem;
+    width: 22px;
+    text-align: center;
+}
+
+.sidebar-footer {
+    padding: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.2);
+}
+
+.backup-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px dashed rgba(255,255,255,0.3);
+    color: white;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* --- الهيكل الرئيسي --- */
+.main-wrapper {
+    margin-right: 0 !important;
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background: var(--card-bg);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    box-shadow: var(--shadow);
+}
+
+.header-title h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-badge {
+    display: none; /* إخفاء اسم المستخدم الطويل لتوفير مساحة على الهاتف، أو يظهر بشكل مصغر */
+}
+
+.mobile-menu-btn {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    color: var(--primary);
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+main {
+    padding: 12px;
+    flex-grow: 1;
+    padding-bottom: 85px; /* مساحة لشريط التنقل السفلي حتى لا يغطي المحتوى */
+}
+
+.view-section {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.view-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* الشبكات والكروت مصممة عمودياً بالكامل للهواتف */
+.grid-4, .grid-3, .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-info h3 {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.stat-info .value {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--primary);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.btn-primary { background: var(--accent); color: white; }
+.btn-secondary { background: var(--primary); color: white; }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+.btn-sm { padding: 5px 10px; font-size: 0.75rem; }
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.section-header h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-responsive { 
+    width: 100%; 
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: right;
+    font-size: 0.85rem;
+    white-space: nowrap; /* منع تكسير النصوص بطريقة سيئة داخل الجدول مع إمكانية التمرير الأفقي السلس */
+}
+
+th, td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: #f8fafc;
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 0.8rem;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.badge-success { background: rgba(39, 174, 96, 0.15); color: var(--success); }
+.badge-warning { background: rgba(243, 156, 18, 0.15); color: var(--warning); }
+.badge-danger { background: rgba(192, 57, 43, 0.15); color: var(--danger); }
+.badge-info { background: rgba(41, 128, 185, 0.15); color: #2980b9; }
+
+/* لوحة الكانبان للهواتف */
+.kanban-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.kanban-col {
+    background: #ebf0f5;
+    border-radius: var(--radius);
+    padding: 12px;
+    border: 1px solid var(--border);
+    min-height: auto;
+}
+
+.kanban-col-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--primary);
+}
+
+.kanban-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.kanban-card {
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    border: 1px solid var(--border);
+}
+
+.kanban-card-title {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.kanban-card-details {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.kanban-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+}
+
+/* النوافذ المنبثقة Modal متوافقة تماماً مع شاشات الجوال */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* تفتح من الأسفل بشكل مريح للهواتف */
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    width: 100%;
+    max-height: 90vh;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.modal.open .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    padding: 16px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 { font-size: 1rem; font-weight: 800; }
+
+.close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 16px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-weight: 700; font-size: 0.8rem; color: var(--primary); margin-bottom: 5px; }
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    outline: none;
+    background: #fff;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr; gap: 14px; }
+
+.alert-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #fff8f0;
+    border: 1px solid #fdebd0;
+    border-right: 4px solid var(--accent);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    font-size: 0.82rem;
+}
+
+.alert-item.danger { background: #fdf2f2; border-color: #fadbd8; border-right-color: var(--danger); }
+.alert-item.success { background: #fef9e7; border-color: #fcbf49; border-right-color: var(--success); }
+.alert-icon { font-size: 1.1rem; color: var(--accent); }
+.alert-item.danger .alert-icon { color: var(--danger); }
+.alert-item.success .alert-icon { color: var(--success); }
+.alert-content { flex-grow: 1; }
+.alert-title { font-weight: 800; color: var(--primary); margin-bottom: 2px; }
+.alert-desc { font-size: 0.75rem; color: var(--text-muted); }
+
+/* --- شريط التنقل السفلي الثابت (Bottom Navigation Bar) --- */
+.mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+    z-index: 1500;
+    justify-content: space-around;
+    padding: 8px 0;
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-grow: 1;
+}
+
+.mobile-nav-item i {
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+}
+
+.mobile-nav-item.active, .mobile-nav-item:hover {
+    color: var(--accent);
+}
+
+@media print {
+    aside, header, .no-print, .btn, .mobile-bottom-nav, .sidebar-overlay { display: none !important; }
+    body, .main-wrapper, main { background: white !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    .modal { position: static !important; background: none !important; padding: 0 !important; display: block !important; }
+    .modal-content { box-shadow: none !important; border: none !important; width: 100% !important; transform: none !important; max-height: none !important; }
+}
